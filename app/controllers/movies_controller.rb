@@ -12,6 +12,7 @@ class MoviesController < ApplicationController
 
   def index
     
+    sort = params[:sort] || session[:sort]
     
     @all_ratings = Movie.select("DISTINCT rating").map(&:rating).sort
     @checked_ratings = params[:ratings] || session[:ratings] || {}
