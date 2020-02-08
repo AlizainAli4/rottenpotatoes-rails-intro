@@ -12,18 +12,32 @@ class MoviesController < ApplicationController
 
   def index
     
+    
+    @all_ratings = Movie.select("DISTINCT rating").map(&:rating).sort
+    @checked_ratings = params[:ratings] || {}
+    
+    
+    if @checked_ratings == {}
+      @checked_ratings = @all_ratings
+    end
+    
     if params[:sort] == "title" then
       @title_header = "hilite"
     else
       @title_header = ""
     end
+    
     if params[:sort] == "release_date" then
       @release_date_header = "hilite"
     else
       @release_date_header = ""
     end
     
-    @movies = Movie.order(params[:sort])
+    if @checked_ratings.respond_to?('keys')
+        @checked_ratings = @checked_ratings.keys
+    end
+    
+    @movies = Movie.order(params[:sort]).where(rating: @checked_ratings)
   
   end
 
