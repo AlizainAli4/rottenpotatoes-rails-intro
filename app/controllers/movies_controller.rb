@@ -16,7 +16,6 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.select("DISTINCT rating").map(&:rating).sort
     @checked_ratings = params[:ratings] || {}
     
-    
     if @checked_ratings == {}
       @checked_ratings = @all_ratings
     end
