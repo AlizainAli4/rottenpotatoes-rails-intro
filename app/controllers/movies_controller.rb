@@ -14,7 +14,7 @@ class MoviesController < ApplicationController
     
     
     @all_ratings = Movie.select("DISTINCT rating").map(&:rating).sort
-    @checked_ratings = params[:ratings] || {}
+    @checked_ratings = params[:ratings] || session[:ratings] || {}
     
     if @checked_ratings == {}
       @checked_ratings = @all_ratings
@@ -30,6 +30,12 @@ class MoviesController < ApplicationController
       @release_date_header = "hilite"
     else
       @release_date_header = ""
+    end
+    
+    if params[:sort] != session[:sort] || params[:ratings] != session[:ratings]
+      session[:sort] = sort
+      session[:ratings] = @checked_ratings
+      redirect_to :sort => sort, :ratings => @checked_ratings and return
     end
     
     if @checked_ratings.respond_to?('keys')
